@@ -13,7 +13,17 @@ impl Config {
         }
         let query = args[1].clone();
         let filename = args[2].clone();
-        let case_sensitive = env::var("CASE_INSENSITIVE").is_err();
+
+        let mut case_sensitive = env::var("CASE_INSENSITIVE").is_err();
+
+        // 環境変数よりもコマンドライン引数を優先
+        if args.len() >= 4 {
+            if args[3].to_lowercase() == "sensitive" {
+                case_sensitive = true;
+            } else if args[3].to_lowercase() == "insensitive" {
+                case_sensitive = false;
+            }
+        }
 
         Ok(Config {
             query,
